@@ -1,4 +1,7 @@
 # user.py
+# Author: Huy Vu
+# Description: Manages the user profile and calculations related to BMI, BMR, and goal tracking.
+
 
 from utils import lbs_to_kg, inches_to_cm
 import datetime

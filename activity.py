@@ -1,4 +1,6 @@
 # activity.py
+# Author: Huy Vu
+# Description: Manages logging and retrieval of calories burned through activities.
 
 from data_storage import DataStorage
 

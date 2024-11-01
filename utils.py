@@ -1,4 +1,8 @@
 # utils.py
+# Author: Huy Vu
+# Description: Utility functions for input validation and unit conversion.
+
+import datetime
 
 def lbs_to_kg(pounds):
     return pounds * 0.453592
@@ -44,3 +48,14 @@ def get_choice_input(prompt, choices):
             return value
         else:
             print(f"Invalid choice. Please enter one of the following: {choices_str}")
+
+def get_date_input(prompt, allow_blank=False):
+    while True:
+        date_str = input(f"{prompt}")
+        if allow_blank and date_str == '':
+            return datetime.date.today()
+        try:
+            date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+            return date
+        except ValueError:
+            print("Invalid date format. Please enter the date in YYYY-MM-DD format.")

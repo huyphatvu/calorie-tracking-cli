@@ -1,4 +1,6 @@
 # nutrition.py
+# Author: Huy Vu
+# Description: Manages logging and retrieval of daily calorie intake.
 
 from data_storage import DataStorage
 

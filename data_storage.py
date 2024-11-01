@@ -1,4 +1,6 @@
 # data_storage.py
+# Author: Huy Vu    
+# Description: Manages data persistence using SQLite, including user profiles and logs.
 
 import sqlite3
 import json
@@ -84,17 +86,30 @@ class DataStorage:
         else:
             return None
 
+    def delete_user_profile(self):
+        cursor = self.conn.cursor()
+        cursor.execute('DELETE FROM user_profile')
+        self.conn.commit()
+
+    def clear_all_data(self):
+        cursor = self.conn.cursor()
+        cursor.execute('DELETE FROM user_profile')
+        cursor.execute('DELETE FROM calorie_intake_log')
+        cursor.execute('DELETE FROM activity_log')
+        cursor.execute('DELETE FROM weight_log')
+        self.conn.commit()
+
     def save_calorie_intake(self, date, calories):
         cursor = self.conn.cursor()
         cursor.execute('''
             INSERT INTO calorie_intake_log (date, calories) VALUES (?, ?)
             ON CONFLICT(date) DO UPDATE SET calories = calories + excluded.calories
-        ''', (date, calories))
+        ''', (date.isoformat(), calories))
         self.conn.commit()
 
     def get_calorie_intake(self, date):
         cursor = self.conn.cursor()
-        cursor.execute('SELECT calories FROM calorie_intake_log WHERE date = ?', (date,))
+        cursor.execute('SELECT calories FROM calorie_intake_log WHERE date = ?', (date.isoformat(),))
         result = cursor.fetchone()
         if result:
             return result[0]
@@ -106,12 +121,12 @@ class DataStorage:
         cursor.execute('''
             INSERT INTO activity_log (date, calories_burned) VALUES (?, ?)
             ON CONFLICT(date) DO UPDATE SET calories_burned = calories_burned + excluded.calories_burned
-        ''', (date, calories))
+        ''', (date.isoformat(), calories))
         self.conn.commit()
 
     def get_calories_burned(self, date):
         cursor = self.conn.cursor()
-        cursor.execute('SELECT calories_burned FROM activity_log WHERE date = ?', (date,))
+        cursor.execute('SELECT calories_burned FROM activity_log WHERE date = ?', (date.isoformat(),))
         result = cursor.fetchone()
         if result:
             return result[0]
@@ -129,7 +144,7 @@ class DataStorage:
         cursor.execute('''
             INSERT INTO weight_log (date, weight) VALUES (?, ?)
             ON CONFLICT(date) DO UPDATE SET weight = excluded.weight
-        ''', (date, weight))
+        ''', (date.isoformat(), weight))
         self.conn.commit()
 
     def get_weight_entries(self):
